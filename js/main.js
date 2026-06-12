@@ -375,7 +375,7 @@ function checkScholar(ans) {
         feedbackText.innerHTML = "<b>Excellent !</b> C'est exactement le mot cherché.";
         
         // إظهار الحقيقة المخفية بالتنسيق الجديد
-        hiddenTextEl.innerText = "« " + data.hiddenText + " »";
+        hiddenTextEl.innerText = data.hiddenText;
         hiddenTextEl.classList.remove('hidden');
         
         feedbackBtn.innerText = "Retour à l'équipe";
@@ -488,6 +488,11 @@ function fillSentenceWord(word) {
 function resetCurrentSentence() {
     currentSentenceBlanks = [];
     document.getElementById("sentence-feedback").classList.add('hidden');
+    
+    // إخفاء زرار الإعادة عند تصفير الجملة
+    let btnRetry = document.getElementById("btn-retry-sentence");
+    if(btnRetry) btnRetry.classList.add('hidden');
+    
     updateSentenceUI();
 }
 
@@ -498,6 +503,7 @@ function checkSentenceBuilder() {
     let feedback = document.getElementById("sentence-feedback");
     let text = document.getElementById("sentence-feedback-text");
     let img = document.getElementById("sentence-anis-reaction");
+    let btnRetry = document.getElementById("btn-retry-sentence");
     
     feedback.classList.remove('hidden');
     
@@ -507,11 +513,14 @@ function checkSentenceBuilder() {
         text.style.color = "var(--nile-green)";
         document.getElementById("btn-next-sentence").classList.remove('hidden');
         document.getElementById("sentence-words-bank").innerHTML = ""; // إخفاء الأزرار المتبقية
+        if(btnRetry) btnRetry.classList.add('hidden');
     } else {
         img.src = "assets/images/characters/anis-oops.png";
         text.innerText = "Oops ! L'ordre est incorrect. Essaie encore.";
         text.style.color = "var(--terra-red)";
-        setTimeout(resetCurrentSentence, 2000); // تصفير تلقائي بعد ثانيتين
+        
+        // إظهار زرار الإعادة وإلغاء الاختفاء التلقائي
+        if(btnRetry) btnRetry.classList.remove('hidden');
     }
 }
 
@@ -537,36 +546,41 @@ function startBalance() {
 }
 
 function updateBalanceUI() {
-    // تحديث الأسهم
+    let instructionText = document.getElementById("balance-instruction");
+
     if(balancePhase === "good") {
         document.getElementById("arrow-good").classList.remove('hidden');
         document.getElementById("arrow-bad").classList.add('hidden');
+        // تحديث النص ليدل على الكفة الخضراء
+        if(instructionText) instructionText.innerHTML = `Placez les phrases dans : <span style="color: var(--nile-green);">Les bonnes informations</span>`;
     } else if (balancePhase === "bad") {
         document.getElementById("arrow-good").classList.add('hidden');
         document.getElementById("arrow-bad").classList.remove('hidden');
+        // تحديث النص ليدل على الكفة الحمراء
+        if(instructionText) instructionText.innerHTML = `Placez les phrases dans : <span style="color: #ff9999;">Les désinformations</span>`;
     } else {
         document.getElementById("arrow-good").classList.add('hidden');
         document.getElementById("arrow-bad").classList.add('hidden');
+        // تحديث النص عند الانتهاء
+        if(instructionText) instructionText.innerHTML = `Toutes les phrases sont placées !`;
     }
 
-    // رسم الجمل في البنك (الجمل اللي لسه متحطتش في الميزان)
     let bankHtml = "";
     level3Sentences.forEach(s => {
         if(!placedGood.includes(s.id) && !placedBad.includes(s.id)) {
             bankHtml += `<button class="btn-option" style="text-align: left; padding: 10px;" onclick="placeSentence('${s.id}')">${s.fullText}</button>`;
         }
     });
-    document.getElementById("balance-bank").innerHTML = bankHtml || "<p style='color:gray;'>Toutes les phrases sont placées.</p>";
+    document.getElementById("balance-bank").innerHTML = bankHtml;
 
-    // رسم الجمل في الكفات
     document.getElementById("box-good").innerHTML = placedGood.map(id => getSentenceText(id)).join('');
     document.getElementById("box-bad").innerHTML = placedBad.map(id => getSentenceText(id)).join('');
 
-    // إظهار زرار الفحص لو كل الجمل اتوزعت
     if(placedGood.length === 2 && placedBad.length === 2) {
         document.getElementById("btn-check-balance").classList.remove('hidden');
         balancePhase = "done";
         document.getElementById("arrow-bad").classList.add('hidden');
+        if(instructionText) instructionText.innerHTML = `Toutes les phrases sont placées !`;
     }
 }
 
@@ -601,23 +615,31 @@ function checkBalance() {
         text.innerText = "Exceptionnel ! La Balance de Maât est en équilibre.";
         text.style.color = "var(--nile-green)";
         document.getElementById("btn-check-balance").classList.add('hidden');
+        document.getElementById("btn-retry-balance").classList.add('hidden');
         document.getElementById("btn-epilogue").classList.remove('hidden');
     } else {
         img.src = "assets/images/characters/anis-oops.png";
         text.innerText = "Oops ! Le mal a infiltré la vérité. Anis doit vider la balance, réessaie !";
         text.style.color = "var(--terra-red)";
         
-        // تفريغ الميزان للبدء من جديد
+        // إظهار زرار الإعادة وإخفاء الفحص، بدون وقت تلقائي
         document.getElementById("btn-check-balance").classList.add('hidden');
-        setTimeout(() => {
-            placedGood = [];
-            placedBad = [];
-            balancePhase = "good";
-            feedback.classList.add('hidden');
-            updateBalanceUI();
-        }, 3500);
+        document.getElementById("btn-retry-balance").classList.remove('hidden');
     }
 }
+
+// دالة جديدة لزر الإعادة الخاص بالميزان
+function resetBalance() {
+    placedGood = [];
+    placedBad = [];
+    balancePhase = "good";
+    
+    document.getElementById("balance-feedback").classList.add('hidden');
+    document.getElementById("btn-retry-balance").classList.add('hidden');
+    
+    updateBalanceUI();
+}
+
 
 function showEpilogue() {
     switchScene('screen-balance', 'screen-epilogue');
