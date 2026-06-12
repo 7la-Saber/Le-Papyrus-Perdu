@@ -289,7 +289,7 @@
             <div class="chat-bubble">
                 <p style="font-size: 1.3rem; line-height: 1.6;">
                     Félicitations <b><span id="player-name-l3"></span></b> ! Tu as terminé le Niveau 2 avec succès.<br><br>
-                    Bienvenue au <b>Niveau 3</b> ! Ici, tu dois d'abord reconstruire les phrases perdues, puis utiliser la Balance de la Justice pour séparer la vérité de la désinformation. Es-tu prêt ?
+                    Bienvenue au <b>Niveau 3</b> ! Ici, tu dois d'abord reconstruire les phrases perdues, puis utiliser la Balance de la Justice pour séparer la vérité de la désinformation. Es-tu prêt/e ?
                 </p>
             </div>
             <button class="btn-lapis" onclick="startSentenceBuilder()" style="margin-top: 20px;">Commencer le Niveau 3</button>
@@ -299,8 +299,7 @@
  <!-- ========================================== -->
     <!-- 8.6 ليفل 3: بناء الجمل -->
     <!-- ========================================== -->
-    <section id="screen-sentence-builder" class="scene hidden">
-        <!-- تم تغيير الخلفية للمعبد الفاضي -->
+<section id="screen-sentence-builder" class="scene hidden">
         <div class="blurred-bg" style="background-image: url('assets/images/maps/bg3.png');"></div>
         <div class="quest-papyrus-bg3" style="background: rgba(244, 234, 225, 0.95); width: 90%; max-width: 900px; padding: 40px;">
             <h2 style="color: var(--lapis-blue); margin-top: 0;">Reconstruire la Phrase (<span id="sentence-counter">1</span>/4)</h2>
@@ -312,61 +311,70 @@
             <div id="sentence-words-bank" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
             </div>
 
-            <div id="sentence-feedback" class="hidden" style="margin: 15px 0;">
-                <img id="sentence-anis-reaction" src="" style="width: 80px; vertical-align: middle;">
-                <span id="sentence-feedback-text" style="font-size: 1.2rem; font-weight: bold; margin-left: 10px;"></span>
+            <div id="sentence-feedback" class="hidden" style="margin: 15px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;">
+                <div>
+                    <img id="sentence-anis-reaction" src="" style="width: 80px; vertical-align: middle;">
+                    <span id="sentence-feedback-text" style="font-size: 1.2rem; font-weight: bold; margin-left: 10px;"></span>
+                </div>
             </div>
 
-            <button class="btn-option" onclick="resetCurrentSentence()">Vider</button>
-            <button id="btn-next-sentence" class="btn-lapis hidden" onclick="nextSentence()">Suivant</button>
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+                <button id="btn-retry-sentence" class="btn-lapis hidden" onclick="resetCurrentSentence()" style="margin: 0; background: var(--terra-red); border-color: white;">Réessayer</button>
+                <button id="btn-next-sentence" class="btn-lapis hidden" onclick="nextSentence()" style="margin: 0; background: var(--nile-green); border-color: white;">Suivant</button>
+            </div>
         </div>
     </section>
 
-
-<!-- ========================================== -->
+    <!-- ========================================== -->
     <!-- 8.7 ليفل 3: ميزان العدالة -->
     <!-- ========================================== -->
     <section id="screen-balance" class="scene hidden">
         <div class="blurred-bg" style="background-image: url('assets/images/maps/balance3.png'); filter: brightness(0.8);"></div>
         
-        <!-- زيادة max-width لـ 1350px لتبتعد المربعات عن بعضها -->
         <div style="z-index: 1; width: 95%; max-width: 1350px; display: flex; flex-direction: column; align-items: center; height: 100vh; justify-content: center;">
             
-            <h2 style="color: var(--pharaoh-gold); text-shadow: 2px 2px 4px #000; font-size: 2.5rem; margin-top: 20px; margin-bottom: 40px;">⚖️ La Balance de la Justice</h2>
+            <!-- قللنا الهوامش (margin) العلوية والسفلية للعنوان -->
+            <h2 style="color: var(--pharaoh-gold); text-shadow: 2px 2px 4px #000; font-size: 2.2rem; margin-top: 5px; margin-bottom: 5px;">La Balance de la Justice</h2>
             
-            <div style="display: flex; width: 100%; justify-content: space-between; align-items: flex-end; padding-bottom: 20px;">
+            <!-- قللنا المسافة السفلية (margin-bottom) للشريط الأسود -->
+            <div id="balance-instruction" style="font-size: 1.3rem; font-weight: bold; color: white; text-shadow: 1px 1px 3px black; background: rgba(0,0,0,0.6); padding: 5px 25px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--sandy-brown);"></div>
+            
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: flex-end; padding-bottom: 10px;">
                 
-                <!-- كفة الحقيقة (تم تقليل margin-bottom لـ 20px لتنزل على الكفة) -->
+                <!-- كفة الحقيقة -->
                 <div id="scale-good" style="width: 240px; background: rgba(42, 157, 143, 0.85); border: 3px solid var(--nile-green); border-radius: 15px; padding: 15px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px;">
-                    <!-- السهم أصبح أصغر (30px) وتم رفعه للأعلى باستخدام margin-bottom: 25px -->
                     <div id="arrow-good" class="hidden" style="position: absolute; bottom: 100%; margin-bottom: 25px; left: 50%; transform: translateX(-50%);">
-                        <img src="assets/images/maps/arrow.png" style="width: 30px; mix-blend-mode: screen; filter: drop-shadow(0 0 10px var(--pharaoh-gold));">
+                        <img src="assets/images/maps/arrow.png" style="width: 30px; mix-blend-mode: screen; filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 20px var(--pharaoh-gold)) brightness(1.5);">
                     </div>
-                    <h3 style="color: var(--nile-green); text-align: center; background: white; padding: 5px; border-radius: 5px; margin-top: 0; font-size: 1.1rem;">Bien Informé ✅</h3>
+                    <h3 style="color: var(--nile-green); text-align: center; background: white; padding: 5px; border-radius: 5px; margin-top: 0; margin-bottom: 10px; font-size: 1.1rem;">Les bonnes informations</h3>
                     <div id="box-good" style="min-height: 120px; display: flex; flex-direction: column; gap: 8px;"></div>
                 </div>
 
-                <!-- بنك الجمل (في المنتصف) -->
-                <div style="width: 400px; background: rgba(255,255,255,0.95); border: 3px dashed var(--sandy-brown); border-radius: 15px; padding: 15px; text-align: center; margin-bottom: -10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 10;">
-                    <h3 style="color: var(--lapis-blue); margin-top: 0; font-size: 1.2rem;">Sélectionne une phrase :</h3>
-                    <div id="balance-bank" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <!-- بنك الجمل (الصندوق الأبيض) -->
+                <div style="width: 420px; background: rgba(255,255,255,0.95); border: 3px dashed var(--sandy-brown); border-radius: 15px; padding: 15px; text-align: center; margin-bottom: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 10;">
                     
-                    <div id="balance-feedback" class="hidden" style="margin-top: 15px;">
-                        <img id="balance-anis" src="" style="width: 80px;">
-                        <p id="balance-feedback-text" style="font-weight: bold; color: var(--terra-red); font-size: 1.1rem; margin-bottom: 0;"></p>
+                    <!-- صغرنا الخط والمسافات بتاعت الكلام المكتوب جوه الصندوق -->
+                    <h3 style="color: var(--lapis-blue); margin-top: 0; margin-bottom: 5px; font-size: 1.1rem; line-height: 1.3;">Sélectionne <br> 1️⃣ les 2 Bonnes Informations ✔️ <br>*PUIS* <br>2️⃣ Les 2 Désinformations ❌️</h3>
+                    <div id="balance-bank" style="display: flex; flex-direction: column; gap: 6px;"></div>
+                    
+                    <div id="balance-feedback" class="hidden" style="margin-top: 5px;">
+                        <img id="balance-anis" src="" style="width: 55px;">
+                        <p id="balance-feedback-text" style="font-weight: bold; color: var(--terra-red); font-size: 1rem; margin-top: 5px; margin-bottom: 0;"></p>
                     </div>
                     
-                    <button id="btn-check-balance" class="btn-lapis hidden" onclick="checkBalance()" style="margin-top: 15px; font-size: 1.1rem; padding: 8px 15px;">Vérifier la Balance ⚖️</button>
-                    <button id="btn-epilogue" class="btn-lapis hidden" onclick="showEpilogue()" style="margin-top: 15px; background: var(--nile-green); font-size: 1.1rem; padding: 8px 15px;">Terminer l'aventure 🏆</button>
+                    <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                        <button id="btn-check-balance" class="btn-lapis hidden" onclick="checkBalance()" style="margin-top: 10px; font-size: 1.1rem; padding: 8px 15px;">Vérifier la Balance</button>
+                        <button id="btn-retry-balance" class="btn-lapis hidden" onclick="resetBalance()" style="margin-top: 10px; font-size: 1.1rem; padding: 8px 15px; background: var(--terra-red); border-color: white;">Réessayer</button>
+                        <button id="btn-epilogue" class="btn-lapis hidden" onclick="showEpilogue()" style="margin-top: 10px; background: var(--nile-green); font-size: 1.1rem; padding: 8px 15px;">Terminer l'aventure</button>
+                    </div>
                 </div>
 
-                <!-- كفة التضليل (تم تقليل margin-bottom لـ 20px لتنزل على الكفة) -->
+                <!-- كفة التضليل -->
                 <div id="scale-bad" style="width: 240px; background: rgba(231, 111, 81, 0.85); border: 3px solid var(--terra-red); border-radius: 15px; padding: 15px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px;">
-                    <!-- السهم أصبح أصغر (30px) وتم رفعه للأعلى باستخدام margin-bottom: 25px -->
                     <div id="arrow-bad" class="hidden" style="position: absolute; bottom: 100%; margin-bottom: 25px; left: 50%; transform: translateX(-50%);">
-                        <img src="assets/images/maps/arrow.png" style="width: 30px; mix-blend-mode: screen; filter: drop-shadow(0 0 10px var(--pharaoh-gold));">
+                        <img src="assets/images/maps/arrow.png" style="width: 30px; mix-blend-mode: screen; filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 20px var(--pharaoh-gold)) brightness(1.5);">
                     </div>
-                    <h3 style="color: var(--terra-red); text-align: center; background: white; padding: 5px; border-radius: 5px; margin-top: 0; font-size: 1.1rem;">Désinformé ❌</h3>
+                    <h3 style="color: var(--terra-red); text-align: center; background: white; padding: 5px; border-radius: 5px; margin-top: 0; margin-bottom: 10px; font-size: 1.1rem;">Les désinformations</h3>
                     <div id="box-bad" style="min-height: 120px; display: flex; flex-direction: column; gap: 8px;"></div>
                 </div>
 
@@ -374,14 +382,13 @@
         </div>
     </section>
 
-
     <!-- 9. النهاية السعيدة -->
     <section id="screen-epilogue" class="scene hidden">
         <div class="blurred-bg" style="background-image: url('assets/images/maps/bg1.png');"></div>
         <div class="quest-papyrus-bg2" style="text-align: center;">
             <img src="assets/images/characters/anis-bravo.png" style="width: 105px;">
             <h2 style="color: var(--lapis-blue); font-size: 2rem;">Mission Accomplie !</h2>
-            <p style="font-size: 1.4rem;"><strong>ODD 16 :</strong> Tu as restauré la Vérité, la Justice et sauvé les Institutions de l'Égypte.</p>
+            <p style="font-size: 1.4rem;"><strong>ODD 16 :</strong> Tu as restauré la Vérité et la Justice.</p>
             <p id="final-congrats" style="font-size: 1.2rem; color: var(--dark-brown); font-weight: bold;"></p>
             <button class="btn-lapis" onclick="location.reload()" style="margin-top: 20px;">Rejouer</button>
         </div>
