@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Papyrus Perdu</title>
+    <!-- استدعاء خط يدوي واقعي للبردية من جوجل -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+    <!-- ملف الـ CSS بتاعنا -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+    
+    <!-- 1. شاشة التحميل (صورة العين المضيئة) -->
+<section id="screen-loading" class="scene" style="background-image: url('assets/images/maps/loading.png'); background-size: cover; background-position: center;">
+        <div id="loading-container">
+            <h2 id="loading-text" style="color: var(--pharaoh-gold); text-shadow: 2px 2px 5px #000; font-family: sans-serif; letter-spacing: 2px;">Chargement...</h2>
+            <div id="loading-bar-wrapper">
+                <div id="loading-bar-fill"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. شاشة الفيديو -->
+    <section id="screen-video" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/map-level1.png');"></div>
+        <div class="video-frame fade-in">
+        <video id="intro-video" width="800" controls>
+            <source src="assets/video/intro.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la vidéo.
+        </video>
+            <div id="video-controls" class="hidden">
+                <button class="btn-lapis" onclick="replayVideo()">Rejouer</button>
+                <button class="btn-lapis" onclick="skipToWelcome()">Continuer</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. شاشة الترحيب وأخذ الاسم -->
+    <section id="screen-welcome" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/bg1.png');"></div>
+        <img src="assets/images/characters/anis-welcome.png" class="anis-large slide-in-left" alt="Anis">
+        <div class="welcome-content fade-in">
+            <div class="chat-bubble">
+                <p>Salut ! Je suis Anis, ton guide. Une tempête a caché les mots sacrés du papyrus de notre royaume !<br> 
+                <strong>Ta mission :</strong> Explore la carte, écoute mes indices, et remplis ton sac à dos avec les mots perdus.</p>
+                <p>Mais d'abord, quel est ton nom, explorateur ?</p>
+            </div>
+            <div class="papyrus-input-box">
+                <input type="text" id="player-name" placeholder="Écris ton nom ici...">
+                <button class="btn-lapis" onclick="saveName()">Commencer</button>
+            </div>
+        </div>
+    </section>
+
+<!-- 3.5 معاينة البردية وتوضيح المهمة -->
+    <section id="screen-papyrus-preview" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/map-level1.jpg');"></div>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 40px; width: 95%; max-width: 1100px; position: relative; z-index: 1;">
+            
+            <!-- النصف الأيسر: البردية الأساسية (جبناها في الأول هنا) -->
+            <div class="quest-papyrus-bg fade-in" style="background: transparent; border: none; box-shadow: none; flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <h2 style="color: var(--dark-brown); margin-top: -30px; font-size: 1.8rem; text-shadow: 1px 1px 2px #fff;">📜 Le Papyrus Endommagé</h2>
+                
+                <div class="real-papyrus-bg">
+                <p>« Pour sauver notre royaume, nous devons avant tout respecter <strong>[ ??? ]</strong> du Nil, source de toute vie. 
+                C'est dans cet esprit que nos paysans s'engagent à protéger <strong>[ ??? ]</strong> verte qui nous nourrit. 
+                De plus, le barrage d'El-Lahun garantit <strong>[ ??? ]</strong> contre les inondations, 
+                tandis que notre nouveau canal facilite <strong>[ ??? ]</strong> équitable des ressources entre les peuples. 
+                Ainsi, en unissant nos efforts et notre sagesse, nous protégeons <strong>[ ??? ]</strong> de nos enfants et assurons la prospérité de notre terre. »
+            </p>
+
+                </div>
+                
+                <button class="btn-lapis" onclick="switchScene('screen-papyrus-preview', 'screen-map')" style="margin-top: 20px; font-size: 1.2rem; padding: 10px 25px;">Aller à la Carte</button>
+            </div>
+
+            <!-- النصف الأيمن: أنيس والفقاعة -->
+            <div class="anis-side-container fade-in">
+                <div class="papyrus-speech-bubble">
+                    <p id="anis-preview-text" style="margin: 0;"></p>
+                </div>
+                <img src="assets/images/characters/anis-welcome.png" alt="Anis">
+            </div>
+            
+        </div>
+    </section>
+
+<!-- 4. الخريطة (Level 1) -->
+        <section id="screen-map" class="scene hidden">
+            <!-- استخدام الخريطة الفاضية كخلفية -->
+            <div id="map-area" style="background-image: url('assets/images/maps/empty_map.png');">
+                
+                <!-- المعالم المقصوصة كأيقونات تفاعلية -->
+                <img src="assets/images/maps/icon-barrage.png" class="map-icon" id="spot-barrage" onclick="openQuest('barrage')" alt="Le Barrage">
+                <img src="assets/images/maps/icon-silo.png" class="map-icon" id="spot-silo" onclick="openQuest('silo')" alt="Les Greniers">
+                <img src="assets/images/maps/icon-champ.png" class="map-icon" id="spot-champ" onclick="openQuest('champ')" alt="Le Champ">
+                <img src="assets/images/maps/icon-nil.png" class="map-icon" id="spot-nil" onclick="openQuest('nil')" alt="Le Nilomètre">
+                <img src="assets/images/maps/icon-canal.png" class="map-icon" id="spot-canal" onclick="openQuest('canal')" alt="Le Canal">
+                
+            </div>
+            
+            <!-- واجهة ليفل 1 الثابتة (الشنطة) -->
+            <div id="level1-ui" class="hidden">
+                <button id="btn-inventory" onclick="toggleInventory()">
+                    <img src="assets/images/ui/sac.png" alt="Sac à dos" id="sac-icon">
+                    <span>Mon Sac</span>
+                </button>
+                <div id="inventory-popup" class="hidden">
+                    <h3 style="margin-top:0;">Mon Sac</h3>
+                    <div id="inventory-items"></div>
+                    <button class="btn-lapis" onclick="toggleInventory()" style="font-size: 1rem; padding: 5px 10px;">Fermer</button>
+                </div>
+            </div>
+        </section>
+
+<!-- 5. شاشة السؤال/المكان -->
+<section id="screen-quest" class="scene hidden">
+    <div class="blurred-bg" style="background-image: url('assets/images/maps/map-level1.jpg');"></div>
+    <div class="quest-papyrus-bg2 fade-in" style="width: 85%; max-width: 900px;">
+        <div id="quest-learning">
+            <div class="quest-layout">
+                <div class="quest-left">
+                    <h2 id="quest-title" class="clickable-text" onclick="playTitleAudio()">Titre</h2>
+                    <p id="quest-brief" class="clickable-text" onclick="playBriefAudio()">Texte de synthèse...</p>
+                </div>
+                <div class="quest-right">
+                    <img id="quest-image" src="" alt="Lieu" class="quest-img-large">
+                </div>
+            </div>
+            <button class="btn-lapis2" onclick="showQuestion()" style="margin-top: 25px;">Aller à la question </button>
+        </div>
+
+        <div id="quest-quiz" class="hidden">
+            <h3 id="quest-question" style="font-size: 1.6rem; color: var(--lapis-blue); margin-bottom: 20px;">Question ?</h3>
+            <div id="quest-options" class="options-flex"></div>
+            <div id="feedback-box" class="hidden">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+                    <img id="anis-reaction" src="" alt="Anis" style="height: 170px; width: auto; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));">
+                    <div style="text-align: left;">
+                        <p id="feedback-text" style="font-size: 1.3rem; margin-top: 0;"></p>
+                        <button id="feedback-btn" class="btn-lapis"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. شاشة تجميع البردية التفاعلية -->
+<section id="screen-assembly" class="scene hidden">
+    <div class="blurred-bg" style="background-image: url('assets/images/maps/map-level1.jpg');"></div>
+    
+    <div class="quest-papyrus-bg3" style="background: rgba(244, 234, 225, 0.9); width: 95%; max-width: 1100px; padding: 40px 50px;">
+        <h2 style="margin-top: -30;">Restaurer le Papyrus</h2>
+        <p style="font-size: 1.2rem; margin-bottom: 20px;">Clique sur les mots pour remplir les vides dans le bon ordre !</p>
+        
+        <div class="assembly-layout">
+            
+            <div class="real-papyrus-bg" style="font-size: 1.2rem; margin: 0;">
+                <p>« Pour sauver notre royaume, nous devons avant tout respecter <strong id="blank-1">[ ??? ]</strong> du Nil, source de toute vie. 
+                C'est dans cet esprit que nos paysans s'engagent à protéger <strong id="blank-2">[ ??? ]</strong> verte qui nous nourrit. 
+                De plus, le barrage d'El-Lahun garantit <strong id="blank-3">[ ??? ]</strong> contre les inondations, 
+                tandis que notre nouveau canal facilite <strong id="blank-4">[ ??? ]</strong> équitable des ressources entre les peuples. 
+                Ainsi, en unissant nos efforts et notre sagesse, nous protégeons <strong id="blank-5">[ ??? ]</strong> de nos enfants et assurons la prospérité de notre terre. »
+                </p>
+            </div>
+            
+            <div class="assembly-right-side">
+                <div id="words-bank-container" style="background: rgba(255,255,255,0.8); padding: 20px; border-radius: 12px; border: 2px dashed var(--sandy-brown); width: 100%; box-sizing: border-box;">
+                    <h3 style="margin-top: 0; color: var(--lapis-blue); font-size: 1.3rem;">Mots trouvés :</h3>
+                    <div id="words-bank" class="options-flex">
+                        </div>
+                </div>
+                
+                <div id="assembly-normal-controls" class="assembly-controls">
+                    <button id="btn-reset-assembly" class="btn-option" onclick="resetAssembly()" style="width: 100%; margin: 5px 0;">Vider les mots 🔄</button>
+                    </div>
+
+                <div id="assembly-feedback-box" class="hidden" style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 12px; border: 2px solid var(--pharaoh-gold); width: 100%; box-sizing: border-box; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                    <img id="assembly-anis-reaction" src="" alt="Anis" style="max-height: 140px; width: auto; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3)); margin-bottom: 10px;">
+                    <p id="assembly-feedback-text" style="font-size: 1.2rem; color: var(--dark-brown); margin: 0 0 15px 0; font-weight: bold;"></p>
+                    <button id="assembly-feedback-btn-next" class="btn-lapis hidden" onclick="startLevel2()" style="width: 100%; margin: 0; font-weight: bold;">Passer au Niveau 2 🚀</button>
+                    <button id="assembly-feedback-btn-retry" class="btn-option hidden" onclick="closeAssemblyFeedback()" style="width: 100%; margin: 0;">Réessayer</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+        <!-- 7. ليفل 2 (علماء 1798) -->
+<section id="screen-video-level2" class="scene hidden" style="background-color: black; z-index: 50;">
+        <video id="transition-video" style="width: 100vw; height: 100vh; object-fit: contain;" controls>
+            <source src="assets/video/intro2.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la vidéo.
+        </video>
+        <div id="video2-controls" class="hidden" style="position: absolute; bottom: 40px; right: 40px; z-index: 51;">
+            <button class="btn-lapis" onclick="skipToWelcomeLevel2()">Continuer</button>
+        </div>
+    </section>
+
+    <section id="screen-welcome-level2" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/temple-1798.png');"></div>
+        <img src="assets/images/characters/anis-welcome.png" class="anis-large" alt="Anis">
+        <div class="welcome-content">
+            <div class="chat-bubble">
+                <p id="anis-level2-text" style="font-size: 1.3rem; line-height: 1.6;"></p>
+            </div>
+            <button class="btn-lapis" onclick="goToScholars()" style="margin-top: 20px;">Rencontrer les scientifiques</button>
+        </div>
+    </section>
+
+    <section id="screen-level2" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/temple-1798.png'); filter: blur(8px) brightness(0.5);"></div>
+        <div style="z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%;">
+            
+            <div class="chat-bubble" style="margin-bottom: 30px;">
+                <p id="anis-level2-intro" style="margin: 0; font-weight: bold;"></p>
+            </div>
+            
+            <div class="options-flex" style="gap: 20px;">
+                <button class="btn-lapis" style="font-size: 1.5rem; padding: 15px 30px;" onclick="openScholar(0)">Le Botaniste</button>
+                <button class="btn-lapis" style="font-size: 1.5rem; padding: 15px 30px;" onclick="openScholar(1)">L'Ingénieur</button>
+                <button class="btn-lapis" style="font-size: 1.5rem; padding: 15px 30px;" onclick="openScholar(2)">L'Artiste</button>
+            </div>
+            
+            <button id="btn-scale" class="btn-lapis hidden" onclick="switchScene('screen-level2', 'screen-finale')" style="margin-top: 40px; background: var(--terra-red);">Aller à la Balance ⚖️</button>
+        </div>
+    </section>
+
+<!-- 8. شاشة العالم (السؤال) -->
+<section id="screen-scholar" class="scene hidden">
+            <div class="blurred-bg" style="background-image: url('assets/images/maps/temple-1798.png');"></div>
+            <div class="quest-papyrus-bg2" style="width: 85%; max-width: 950px; position: relative; z-index: 1;">
+                <div class="quest-layout">
+                    <div class="quest-right" style="flex: 1;"> 
+                        <img id="scholar-image" src="" alt="Indice" class="quest-img-large hidden" style="border: 4px solid var(--sandy-brown); max-height: 350px; object-fit: contain;">
+                    </div>
+                    
+                    <div class="quest-left" style="flex: 1.2;">
+                        <h2 id="scholar-name" style="color: var(--lapis-blue); margin-top: 0;"></h2>
+                        <p id="scholar-dialogue" style="font-size: 1.4rem; line-height: 1.6;"></p>
+                        
+                        <div id="scholar-options" class="options-flex" style="justify-content: flex-start; margin-top: 20px;"></div>
+                        
+                        <div id="scholar-feedback-box" class="hidden" style="margin-top: 20px; background: rgba(255,255,255,0.85); padding: 20px; border-radius: 12px; border: 2px dashed var(--sandy-brown);">
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <img id="scholar-anis-reaction" src="" alt="Anis" style="max-height: 120px; width: auto; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));">
+                                <div style="text-align: left;">
+                                    <p id="scholar-feedback-text" style="font-size: 1.3rem; margin-top: 0; color: var(--dark-brown);"></p>
+                                    
+                                    <p id="scholar-hidden-text" class="hidden" style="font-family: 'Caveat', cursive; font-size: 1.8rem; color: var(--lapis-blue); line-height: 1.3; margin: 10px 0; padding: 10px 15px; background: var(--papyrus-beige); border-left: 5px solid var(--pharaoh-gold);"></p>
+                                    
+                                    <button id="scholar-feedback-btn" class="btn-lapis" style="margin-left: 0; margin-top: 10px;"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. النهاية والميزان -->
+        <section id="screen-finale" class="scene hidden">
+            <div class="quest-papyrus-bg">
+                <h2>⚖️ La Balance de la Justice</h2>
+                <p id="anis-finale-text"></p>
+                <button class="btn-option" onclick="showEpilogue()">L'injustice sociale et environnementale</button>
+                <button class="btn-option" onclick="showEpilogue()">La désinformation et les fausses institutions</button>
+                <div id="epilogue-msg" class="hidden">
+                    <p><strong>ODD 16 :</strong> L'histoire se répète. Aucune société ne peut survivre sans la Vérité, la Justice et des Institutions fortes.</p>
+                    <button class="btn-lapis" onclick="location.reload()">Rejouer</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 8.5 ترحيب ليفل 3 -->
+    <!-- ========================================== -->
+    <section id="screen-welcome-level3" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/temple-1798.png');"></div>
+        <img src="assets/images/characters/anis-welcome.png" class="anis-large" alt="Anis">
+        <div class="welcome-content">
+            <div class="chat-bubble">
+                <p style="font-size: 1.3rem; line-height: 1.6;">
+                    Félicitations <b><span id="player-name-l3"></span></b> ! Tu as terminé le Niveau 2 avec succès.<br><br>
+                    Bienvenue au <b>Niveau 3</b> ! Ici, tu dois d'abord reconstruire les phrases perdues, puis utiliser la Balance de la Justice pour séparer la vérité de la désinformation. Es-tu prêt ?
+                </p>
+            </div>
+            <button class="btn-lapis" onclick="startSentenceBuilder()" style="margin-top: 20px;">Commencer le Niveau 3</button>
+        </div>
+    </section>
+
+ <!-- ========================================== -->
+    <!-- 8.6 ليفل 3: بناء الجمل -->
+    <!-- ========================================== -->
+    <section id="screen-sentence-builder" class="scene hidden">
+        <!-- تم تغيير الخلفية للمعبد الفاضي -->
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/bg3.png');"></div>
+        <div class="quest-papyrus-bg3" style="background: rgba(244, 234, 225, 0.95); width: 90%; max-width: 900px; padding: 40px;">
+            <h2 style="color: var(--lapis-blue); margin-top: 0;">Reconstruire la Phrase (<span id="sentence-counter">1</span>/4)</h2>
+            <p style="font-size: 1.2rem;">Clique sur les mots dans le bon ordre pour former la phrase.</p>
+            
+            <div style="background: var(--papyrus-beige); border: 2px dashed var(--sandy-brown); padding: 20px; min-height: 50px; border-radius: 10px; margin: 20px 0; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;" id="sentence-slots">
+            </div>
+
+            <div id="sentence-words-bank" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px;">
+            </div>
+
+            <div id="sentence-feedback" class="hidden" style="margin: 15px 0;">
+                <img id="sentence-anis-reaction" src="" style="width: 80px; vertical-align: middle;">
+                <span id="sentence-feedback-text" style="font-size: 1.2rem; font-weight: bold; margin-left: 10px;"></span>
+            </div>
+
+            <button class="btn-option" onclick="resetCurrentSentence()">Vider</button>
+            <button id="btn-next-sentence" class="btn-lapis hidden" onclick="nextSentence()">Suivant</button>
+        </div>
+    </section>
+
+
+<!-- ========================================== -->
+    <!-- 8.7 ليفل 3: ميزان العدالة -->
+    <!-- ========================================== -->
+    <section id="screen-balance" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/balance3.png'); filter: brightness(0.8);"></div>
+        
+        <!-- زيادة max-width لـ 1350px لتبتعد المربعات عن بعضها -->
+        <div style="z-index: 1; width: 95%; max-width: 1350px; display: flex; flex-direction: column; align-items: center; height: 100vh; justify-content: center;">
+            
+            <h2 style="color: var(--pharaoh-gold); text-shadow: 2px 2px 4px #000; font-size: 2.5rem; margin-top: 20px; margin-bottom: 40px;">⚖️ La Balance de la Justice</h2>
+            
+            <div style="display: flex; width: 100%; justify-content: space-between; align-items: flex-end; padding-bottom: 20px;">
+                
+                <!-- كفة الحقيقة (تم تقليل margin-bottom لـ 20px لتنزل على الكفة) -->
+                <div id="scale-good" style="width: 240px; background: rgba(42, 157, 143, 0.85); border: 3px solid var(--nile-green); border-radius: 15px; padding: 15px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px;">
+                    <!-- السهم أصبح أصغر (30px) وتم رفعه للأعلى باستخدام margin-bottom: 25px -->
+                    <div id="arrow-good" class="hidden" style="position: absolute; bottom: 100%; margin-bottom: 25px; left: 50%; transform: translateX(-50%);">
+                        <img src="assets/images/maps/arrow.png" style="width: 30px; mix-blend-mode: screen; filter: drop-shadow(0 0 10px var(--pharaoh-gold));">
+                    </div>
+                    <h3 style="color: var(--nile-green); text-align: center; background: white; padding: 5px; border-radius: 5px; margin-top: 0; font-size: 1.1rem;">Bien Informé ✅</h3>
+                    <div id="box-good" style="min-height: 120px; display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
+
+                <!-- بنك الجمل (في المنتصف) -->
+                <div style="width: 400px; background: rgba(255,255,255,0.95); border: 3px dashed var(--sandy-brown); border-radius: 15px; padding: 15px; text-align: center; margin-bottom: -10px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 10;">
+                    <h3 style="color: var(--lapis-blue); margin-top: 0; font-size: 1.2rem;">Sélectionne une phrase :</h3>
+                    <div id="balance-bank" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                    
+                    <div id="balance-feedback" class="hidden" style="margin-top: 15px;">
+                        <img id="balance-anis" src="" style="width: 80px;">
+                        <p id="balance-feedback-text" style="font-weight: bold; color: var(--terra-red); font-size: 1.1rem; margin-bottom: 0;"></p>
+                    </div>
+                    
+                    <button id="btn-check-balance" class="btn-lapis hidden" onclick="checkBalance()" style="margin-top: 15px; font-size: 1.1rem; padding: 8px 15px;">Vérifier la Balance ⚖️</button>
+                    <button id="btn-epilogue" class="btn-lapis hidden" onclick="showEpilogue()" style="margin-top: 15px; background: var(--nile-green); font-size: 1.1rem; padding: 8px 15px;">Terminer l'aventure 🏆</button>
+                </div>
+
+                <!-- كفة التضليل (تم تقليل margin-bottom لـ 20px لتنزل على الكفة) -->
+                <div id="scale-bad" style="width: 240px; background: rgba(231, 111, 81, 0.85); border: 3px solid var(--terra-red); border-radius: 15px; padding: 15px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px;">
+                    <!-- السهم أصبح أصغر (30px) وتم رفعه للأعلى باستخدام margin-bottom: 25px -->
+                    <div id="arrow-bad" class="hidden" style="position: absolute; bottom: 100%; margin-bottom: 25px; left: 50%; transform: translateX(-50%);">
+                        <img src="assets/images/maps/arrow.png" style="width: 30px; mix-blend-mode: screen; filter: drop-shadow(0 0 10px var(--pharaoh-gold));">
+                    </div>
+                    <h3 style="color: var(--terra-red); text-align: center; background: white; padding: 5px; border-radius: 5px; margin-top: 0; font-size: 1.1rem;">Désinformé ❌</h3>
+                    <div id="box-bad" style="min-height: 120px; display: flex; flex-direction: column; gap: 8px;"></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 9. النهاية السعيدة -->
+    <section id="screen-epilogue" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/bg1.png');"></div>
+        <div class="quest-papyrus-bg2" style="text-align: center;">
+            <img src="assets/images/characters/anis-bravo.png" style="width: 105px;">
+            <h2 style="color: var(--lapis-blue); font-size: 2rem;">Mission Accomplie !</h2>
+            <p style="font-size: 1.4rem;"><strong>ODD 16 :</strong> Tu as restauré la Vérité, la Justice et sauvé les Institutions de l'Égypte.</p>
+            <p id="final-congrats" style="font-size: 1.2rem; color: var(--dark-brown); font-weight: bold;"></p>
+            <button class="btn-lapis" onclick="location.reload()" style="margin-top: 20px;">Rejouer</button>
+        </div>
+    </section>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

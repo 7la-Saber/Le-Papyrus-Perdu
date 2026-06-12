@@ -1,0 +1,652 @@
+/* ==========================================
+   1. الألوان الأساسية والخطوط
+========================================== */
+:root {
+    --papyrus-beige: #F4EAE1;
+    --sandy-brown: #D5B990;
+    --dark-brown: #3E2723;
+    --lapis-blue: #1D3557;
+    --nile-green: #2A9D8F;
+    --pharaoh-gold: #E9C46A;
+    --terra-red: #E76F51;
+}
+
+body { 
+    margin: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: var(--dark-brown); 
+    color: var(--dark-brown); 
+    overflow: hidden; 
+}
+
+/* ==========================================
+   2. نظام المشاهد (Scenes) والخلفيات
+========================================== */
+.scene {
+    position: absolute; 
+    width: 100vw; 
+    height: 100vh;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    background: var(--dark-brown); 
+    transition: opacity 0.5s;
+}
+
+.hidden { display: none !important; }
+
+/* تنسيق الخلفية الضبابية لشاشة الفيديو والترحيب والأسئلة */
+.blurred-bg {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    filter: blur(12px) brightness(0.6); 
+    z-index: 0;
+}
+
+.blurred-bg3 {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    filter: blur(12px) brightness(0.6); 
+    z-index: 0;
+}
+
+/* ==========================================
+    3. شاشة التحميل (Loading)
+========================================== */
+#loading-container {
+    position: absolute;
+    top: 10%; 
+    left: 51%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 2;
+}
+
+#loading-bar-wrapper {
+    width: 350px;
+    height: 15px;
+    border: 2px solid var(--pharaoh-gold);
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 15px var(--pharaoh-gold);
+}
+
+#loading-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--pharaoh-gold);
+    box-shadow: 0 0 10px var(--pharaoh-gold);
+    transition: width 0.1s linear;
+}
+
+/* ==========================================
+   4. الفيديو والترحيب
+========================================== */
+.video-frame {
+    background-color: var(--dark-brown);
+    padding: 15px;
+    border: 4px solid var(--sandy-brown);
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    text-align: center;
+    max-width: 850px;
+    z-index: 1;
+}
+
+#video-controls { margin-top: 15px; }
+
+.anis-large {
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    height: 80vh; 
+    z-index: 1;
+}
+
+.welcome-content {
+    position: absolute;
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+}
+
+/* ==========================================
+   تنسيق البردية الحقيقية (بناءً على الصورة 1000488218.png)
+========================================== */
+/* ==========================================
+   تنسيق البردية الحقيقية (بشكل مخطوطة يدوية)
+========================================== */
+.real-papyrus-bg {
+    background-image: url('../assets/images/ui/papyrus.png'); 
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    width: 540px; /* عرض ثابت عشان البردية تفضل مفرودة */
+    min-height: 420px; /* طول مناسب عشان الكلام ميخرجش من تحت */
+    box-sizing: border-box; 
+    
+    /* قللنا المسافات الجانبية عشان الكلام يفرد براحته */
+    padding: 80px 60px; 
+    margin: 0 auto;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    font-family: 'Caveat', 'Papyrus', cursive;
+    font-size: 1.25rem; /* صغرنا الخط سنة عشان يكفي جوه الرسمة */
+    line-height: 1.6;
+    color: #2c1610;
+    font-weight: 700;
+    text-align: center;
+    mix-blend-mode: multiply; 
+    border: none;
+}
+
+.real-papyrus-bg p {
+    margin: 0;
+    display: inline;
+}
+
+.real-papyrus-bg strong {
+    color: #902613; 
+    padding: 0 4px;
+    font-size: 1.4rem; /* صغرنا النقط شوية */
+    font-weight: 700;
+    display: inline-block;
+}
+
+
+/* ==========================================
+   خلفية شاشة معاينة البردية - مع تأثير الضبابية (Blur)
+========================================== */
+#screen-papyrus-preview {
+    position: relative;
+    background-color: var(--dark-brown); 
+    overflow: hidden;
+}
+
+/* بنخلق طبقة وهمية للخلفية بس علشان نطبق عليها الضبابية */
+#screen-papyrus-preview::before {
+    content: "";
+    position: absolute;
+    /* بنكبر الطبقة دي سنة بسيطة علشان الحواف متأثرش بالزغللة */
+    top: -10px; left: -15px; right: -15px; bottom: -15px; 
+    
+    background-image: url('../assets/images/maps/bg1.png');
+    background-size: cover;
+    background-position: center;
+    
+    /* 🎛️ التعديل هنا: 
+       blur(8px) بتتحكم في درجة الضبابية.. زودي الرقم أو نقصيه براحتك
+       brightness(0.6) بتغمق الصورة 40% علشان الكلام يبرز */
+    filter: blur(4px) brightness(0.6); 
+    z-index: 0; /* بنخليها ورا خالص */
+}
+
+/* بنأكد إن أي حاجة جوه الشاشة دي (أنيس والبردية) تفضل قدام الطبقة الضبابية */
+#screen-papyrus-preview > div {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================
+   5. الأزرار والنصوص والمربعات
+========================================== */
+.btn-lapis { 
+    background: var(--lapis-blue); 
+    color: white; 
+    border: 2px solid var(--pharaoh-gold); 
+    padding: 10px 20px; 
+    font-size: 1.2rem; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    margin: 10px; 
+    transition: 0.3s;
+    margin-top: 0px;
+}
+
+
+.btn-lapis2 { 
+    background: var(--lapis-blue); 
+    color: white; 
+    border: 2px solid var(--pharaoh-gold); 
+    padding: 10px 20px; 
+    font-size: 1.2rem; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    margin: 10px; 
+    transition: 0.3s;
+    margin-top: -100px;
+}
+.btn-lapis:hover { transform: scale(1.05); box-shadow: 0 0 10px var(--pharaoh-gold); }
+
+.btn-option { 
+    background: var(--sandy-brown); 
+    border: 2px solid var(--dark-brown); 
+    padding: 10px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    margin: 5px; 
+    font-size: 1.1rem; 
+    transition: 0.3s;
+    margin-top: 0px;
+}
+.btn-option3 { 
+    background: var(--sandy-brown); 
+    border: 2px solid var(--dark-brown); 
+    padding: 10px; 
+    border-radius: 3px; 
+    cursor: pointer; 
+    margin: 5px; 
+    /* font-size: 1.1rem;  */
+    transition: 0.3s;
+    margin-top: 0px;
+}
+.btn-option:hover { background: var(--lapis-blue); color: white; }
+
+.chat-bubble { 
+    background: white; 
+    border: 2px solid var(--sandy-brown); 
+    padding: 15px; 
+    border-radius: 10px; 
+    max-width: 400px; 
+    font-size: 1.2rem; 
+    margin-bottom: 20px; 
+}
+
+/* ==========================================
+   فقاعة كلام أنيس (البردية الصغيرة)
+========================================== */
+.papyrus-speech-bubble {
+    background-image: url('../assets/images/ui/bubble.png'); 
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    width: 320px;
+    min-height: 250px; 
+    box-sizing: border-box;
+    padding: 30px 40px 70px 40px; 
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-family: 'Caveat', 'Papyrus', cursive;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c1610;
+    text-align: center;
+    line-height: 1.4;
+    z-index: 3;
+    
+    /* ↔️ التعديل هنا: تظبيط مكان الفقاعة عشان الديل ييجي مظبوط مع أنيس */
+    margin-bottom: 280px; /* رفعنا الفقاعة سنة لفوق */
+    margin-right: -20px; /* قربناها من أنيس */
+}
+
+/* تنسيق الجانب الأيسر (أنيس والفقاعة) */
+.anis-side-container {
+    position: relative;
+    display: flex;
+    
+    /* ↔️ التعديل السحري: خليناهم جنب بعض بدل فوق بعض */
+    flex-direction: row; 
+    align-items: flex-end; /* خلينا أنيس والفقاعة على نفس الخط من تحت */
+    
+    width: auto;
+    z-index: 2;
+}
+
+.anis-side-container img {
+    width: 170px; 
+    margin-top: 0; 
+    margin-left: 0; 
+    z-index: 4; /* خلينا أنيس قدام الفقاعة عشان يداري على طرف الديل */
+}
+
+
+/* ==========================================
+   البردية الأساسية والصندوق الخارجي
+========================================== */
+.quest-papyrus-bg { 
+    background: #e8d3b9; 
+    border: 4px dashed var(--sandy-brown); 
+    padding: 70px; 
+    border-radius: 10px; 
+    max-height: 400px;
+    max-width: 900px; 
+    text-align: center; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+    z-index: 1;
+    
+    /* ⬆️ التعديل هنا: رفعنا البردية والعنوان لفوق */
+    margin-top: -150px; 
+}
+
+.quest-papyrus-bg2 { 
+    background: #e8d3b9; 
+    border: 4px dashed var(--sandy-brown); 
+    padding: 40px 50px; /* تظبيط المسافات عشان متبقاش واسعة بزيادة من فوق */
+    border-radius: 10px; 
+    
+    /* الحل السحري: السماح للصندوق يطول براحته */
+    height: auto; 
+    max-height: 88vh; /* أقصى حاجة ياخدها 88% من الشاشة عشان ميسقطش تحت */
+    overflow-y: auto; /* لو الشاشة صغيرة جداً، يعمل سكرول داخلي شيك */
+    
+    max-width: 950px; 
+    text-align: center; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+    z-index: 1;
+}
+
+.papyrus-text-box { 
+    background: var(--papyrus-beige); 
+    padding: 15px; 
+    border: 1px solid var(--dark-brown); 
+    font-size: 1.2rem; 
+    line-height: 1.6; 
+    text-align: left; 
+}
+
+.options-flex { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 10px; 
+    margin-top: 15px; 
+}
+
+/* ==========================================
+    6. الخريطة التفاعلية (Level 1)
+========================================== */
+#map-area { 
+    position: relative; 
+    width: 1000px; /* تكبير العرض ليناسب أبعاد الخريطة الجديدة */
+    height: 600px; 
+    background-size: 100% 100%; 
+    background-repeat: no-repeat;
+    border: 4px solid var(--dark-brown); 
+    border-radius: 10px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+/* تنسيق صور المعالم (المباني) */
+.map-icon { 
+    position: absolute; 
+    width: 160px; /* حجم المبنى الافتراضي */
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.4)); /* ظل خفيف ليبرز المبنى عن الأرض */
+    z-index: 5;
+}
+
+/* تأثير احترافي عند وقوف الماوس على المبنى */
+.map-icon:hover { 
+    transform: scale(1.1) translateY(-5px); /* يكبر قليلاً ويرتفع لأعلى */
+    filter: drop-shadow(0 10px 15px rgba(233, 196, 106, 0.9)); /* إشعاع ذهبي فرعوني */
+    z-index: 10;
+}
+
+/* ------------------------------------- */
+/* إحداثيات (أماكن) المعالم على الخريطة الفارغة */
+/* تم ضبطها لتتطابق مع الخريطة الأصلية */
+/* ------------------------------------- */
+
+/* سد اللاهون (أعلى اليسار عند مخرج البحيرة) */
+#spot-barrage { 
+    top: 12%; 
+    left: 17.5%; 
+    width: 24%; 
+}
+
+/* صوامع الغلال (أعلى اليمين) */
+#spot-silo { 
+    top: 17%; 
+    left: 56%; 
+    width: 15%; 
+}
+
+/* الحقل الأخضر (أسفل اليسار عند المساحة الخضراء) */
+#spot-champ { 
+    top: 46%; 
+    left: 21%; 
+    width: 23%; 
+}
+
+/* مقياس النيل (المنتصف بالأسفل عند منحنى النهر) */
+#spot-nil { 
+    top: 54%; 
+    left: 52%; 
+    width: 13%; 
+}
+
+/* قناة سيزوستريس (أسفل اليمين) */
+#spot-canal { 
+    top: 59%; 
+    left: 61%; 
+    width: 24%; 
+}
+
+
+
+/* ==========================================
+   7. الشنطة العائمة (Floating Inventory)
+========================================== */
+#level1-ui {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; 
+    z-index: 999; 
+}
+
+#btn-inventory {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: auto; 
+    transition: transform 0.3s;
+}
+
+#btn-inventory:hover { transform: scale(1.1); }
+
+#sac-icon {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); 
+}
+
+#btn-inventory span {
+    background: var(--papyrus-beige);
+    color: var(--dark-brown);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    border: 2px solid var(--sandy-brown);
+    margin-top: -15px; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 2;
+}
+
+#inventory-popup {
+    position: absolute;
+    bottom: 120px; 
+    right: 30px;
+    width: 250px;
+    background: var(--sandy-brown);
+    padding: 20px;
+    border-radius: 15px;
+    border: 3px solid var(--dark-brown);
+    pointer-events: auto;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+    text-align: center;
+}
+
+.inv-item { 
+    display: inline-block; 
+    padding: 5px 10px; 
+    border: 2px solid var(--dark-brown); 
+    background: var(--papyrus-beige); 
+    margin: 5px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* ==========================================
+   8. شاشة المكان التفاعلية (Quest Layout)
+========================================== */
+.quest-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    
+}
+
+.quest-left {
+    flex: 1.2; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.quest-right { flex: 1; }
+
+.quest-img-large {
+    width: 100%;
+    border-radius: 12px;
+    border: 4px solid var(--dark-brown);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    object-fit: cover;
+}
+
+.clickable-text {
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px dashed var(--sandy-brown);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.clickable-text:hover {
+    background: rgba(233, 196, 106, 0.3); 
+    border-color: var(--lapis-blue);
+    transform: translateX(5px); 
+}
+
+.clickable-text::after {
+    content: ' 🔊';
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+#quest-title {
+    color: var(--lapis-blue);
+    font-size: 2.2rem;
+    margin: 0;
+}
+
+#quest-brief {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: var(--dark-brown);
+    margin: 0;
+}
+
+/* ==========================================
+   تنسيق تقسيم شاشة تجميع البردية (جنباً إلى جنب)
+========================================== */
+
+.quest-papyrus-bg3 { 
+    background: #e8d3b9; 
+    border: 4px dashed var(--sandy-brown); 
+    padding: 30px 40px; /* ظبطنا المسافات الداخلية عشان تلم الشاشة */
+    border-radius: 10px; 
+    
+    /* شيلنا الـ 400px اللي كانت بتخنق الصندوق وخليناه يتمدد براحته */
+    height: auto; 
+    max-height: 82vh; /* أقصى حاجة 90% من الشاشة */
+    max-width: 1000px; 
+    text-align: center; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+    z-index: 1;
+    /* overflow-y: auto; */
+}
+
+
+.assembly-layout {
+    display: flex;
+    flex-direction: row; /* رص العناصر أفقياً يمين وشمال */
+    align-items: center;
+    justify-content: center;
+    gap: 40px; /* مسافة أمان بين البردية ومربع الأزرار */
+    width: 100%;
+}
+
+/* الجانب الأيمن (صندوق الكلمات والأزرار) */
+.assembly-right-side {
+    flex: 1;
+    max-width: 380px; /* تحديد عرض مناسب وملموم للأزرار */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* أزرار التحكم السفلى */
+.assembly-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* لضمان ثبات حجم البردية وعدم انكماشها على اليسار */
+#screen-assembly .real-papyrus-bg {
+    width: 480px;
+    min-height: 400px;
+    flex-shrink: 0;
+    margin-top: -20px; /* رفعنا البردية لفوق سنة بسيطة */
+    padding: 50px 50px; /* تظبيط مساحات الكلام جواها */
+}
+
+
+#screen-assembly h2 {
+    margin-top: -20px; 
+}
+/* زيادة مساحة الصندوق الخارجي ليفل 1 و 2 ليتسع للتصميم الجديد */
+/* .quest-papyrus-bg2 {
+    /* max-height: 90vh !important; يسمح للصندوق بالتمدد الرأسي المريح */
+    /* overflow-y: auto; إضافة سكرول داخلي احتياطي لو الشاشة صغيرة */
+/* } */
