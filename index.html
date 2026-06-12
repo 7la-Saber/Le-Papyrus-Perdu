@@ -45,6 +45,7 @@
             <div class="chat-bubble">
                 <p>Salut ! Je suis Anis, ton guide. Une tempête a caché les mots sacrés du papyrus de notre royaume !<br> 
                 <strong>Ta mission :</strong> Explore la carte, écoute mes indices, et remplis ton sac à dos avec les mots perdus.</p>
+                <p>C'est une mission pour un/e francophone de niveau A2-B1</p>
                 <p>Mais d'abord, quel est ton nom, explorateur ?</p>
             </div>
             <div class="papyrus-input-box">
@@ -322,6 +323,46 @@
                 <button id="btn-retry-sentence" class="btn-lapis hidden" onclick="resetCurrentSentence()" style="margin: 0; background: var(--terra-red); border-color: white;">Réessayer</button>
                 <button id="btn-next-sentence" class="btn-lapis hidden" onclick="nextSentence()" style="margin: 0; background: var(--nile-green); border-color: white;">Suivant</button>
             </div>
+        </div>
+    </section>
+
+
+<!-- ========================================== -->
+    <!-- 8.6.5 ليفل 3: قراءة البردية (المرجع للميزان) -->
+    <!-- ========================================== -->
+    <section id="screen-papyrus-level3" class="scene hidden">
+        <div class="blurred-bg" style="background-image: url('assets/images/maps/bg3.png'); filter: blur(10px) brightness(0.5);"></div>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 40px; width: 95%; max-width: 1100px; position: relative; z-index: 1;">
+            
+            <!-- النصف الأيسر: البردية -->
+            <div class="quest-papyrus-bg fade-in" style="background: transparent; border: none; box-shadow: none; flex: 1; display: flex; flex-direction: column; align-items: center;">
+                <h2 style="color: var(--pharaoh-gold); margin-top: 10px; margin-bottom: 20px; font-size: 2.2rem; text-shadow: 2px 2px 4px #000;">Le Papyrus de la Vérité</h2>
+                
+                <!-- تم إزالة صندوق التنبيه الأحمر وتكبير الـ padding الجانبي لـ 90px -->
+                <div class="real-papyrus-bg" style="padding: 70px 90px 60px 90px; text-align: left; display: flex; flex-direction: column; justify-content: center;">
+                    <!-- زر تشغيل الصوت -->
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <button class="btn-option" onclick="playPapyrusL3Audio()" style="border-radius: 20px; font-weight: bold; background: white; color: var(--lapis-blue);">🔊 Écouter la vérité</button>
+                    </div>
+                    
+                    <p style="font-size: 1.05rem; line-height: 1.5; color: #2c1610; margin: 0;">
+                        « L'Égypte ancienne aime le Nil et la nature. Les Égyptiens aiment l'agriculture et protègent l'eau avec des barrages pour tous; les rois, les paysans, riches ou pauvres. Pour eux, polluer le Nil est un péché.<br>
+                        Ils aiment la paix et détestent la guerre, comme Ramsès II à Qadesh. Aujourd'hui, nous devons apprendre d'eux la paix et le respect de l'environnement. »
+                    </p>
+                </div>
+                
+                <button class="btn-lapis" onclick="startBalance()" style="margin-top: 15px; font-size: 1.2rem; padding: 10px 25px;">Aller à la Balance</button>
+            </div>
+
+            <!-- النصف الأيمن: أنيس -->
+            <div class="anis-side-container fade-in">
+                <div class="papyrus-speech-bubble">
+                    <p style="margin: 0; font-size: 1.4rem;">Lis et écoute bien ce papyrus ! Il contient la vérité qui t'aidera à séparer les bonnes informations des désinformations dans la Balance.</p>
+                </div>
+                <img src="assets/images/characters/anis-welcome.png" alt="Anis">
+            </div>
+            
         </div>
     </section>
 
