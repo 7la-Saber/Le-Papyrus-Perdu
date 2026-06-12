@@ -64,11 +64,11 @@ const scholarsLevel2 = [
         image: "assets/images/items/sun.jpg",
         options: ["Le blé", "Le vent", "Le soleil", "Le sable"],
         correct: "Le soleil",
-        hiddenText: "Le Botaniste: Mais les rois ont volé cette richesse, laissant le peuple dans la faim et l'obscurité."
+        hiddenText: "Le Botaniste: \"Mais les rois ont volé cette richesse, laissant le peuple dans la faim et l'obscurité.\""
     },
     {
         name: "L'Ingénieur",
-        dialogue: "Ce grand barrage à El-Lahun, qu'est-ce qu'il garantit?",
+        dialogue: "Le grand barrage à El-Lahun, qu'est-ce qu'il garantit?",
         image: "assets/images/items/protection.png",
         options: ["La protection", "La guerre", "La paix", "L'eau"],
         correct: "La protection",
@@ -80,7 +80,7 @@ const scholarsLevel2 = [
         image: "assets/images/items/nature.png",
         options: ["La nature", "La magie", "La guerre", "La tristesse"],
         correct: "La nature",
-        hiddenText: "Ils aimaient la nature, les pharaons ont dessiné beaucoup d'éléments de la nature comme : les plantes, le soleil, les animaux,...etc."
+        hiddenText: "L'Artiste: \"Ils aimaient la nature, les pharaons ont dessiné beaucoup d'éléments de la nature comme : les plantes, le soleil, les animaux,...etc.\""
     }
 ];
 
@@ -103,9 +103,9 @@ const level3Sentences = [
     },
     {
         id: "s3",
-        scrambled: ["beaucoup", "la nature", "Ils", "aimaient"],
-        correct: ["Ils", "aimaient", "beaucoup", "la nature"],
-        fullText: "Ils aimaient beaucoup la nature.",
+        scrambled: ["beaucoup", "la nature", "Les pharaons", "aimaient"],
+        correct: ["Les pharaons", "aimaient", "beaucoup", "la nature"],
+        fullText: "Les pharaons aimaient beaucoup la nature.",
         type: "good" // Bien informé
     },
     {
