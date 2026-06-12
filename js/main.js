@@ -524,14 +524,36 @@ function checkSentenceBuilder() {
     }
 }
 
+// التعديل هنا: بعد الجملة الأخيرة يروح للبردية بدل الميزان مباشرة
 function nextSentence() {
     currentL3Index++;
     if(currentL3Index < level3Sentences.length) {
         renderSentenceBuilder();
     } else {
-        startBalance();
+        // الانتقال لشاشة البردية
+        switchScene('screen-sentence-builder', 'screen-papyrus-level3');
+        // تشغيل الصوت تلقائياً أول ما الشاشة تفتح
+        playPapyrusL3Audio();
     }
 }
+
+// التعديل هنا: دالة الانتقال للميزان من شاشة البردية
+function startBalance() {
+    // إيقاف الصوت لو اللاعب داس "التالي" والصوت لسه شغال
+    papyrusL3Audio.pause(); 
+    
+    switchScene('screen-papyrus-level3', 'screen-balance');
+    updateBalanceUI();
+}
+
+
+let papyrusL3Audio = new Audio("assets/audio/voices/الجملة الأخيرة .mp3");
+
+function playPapyrusL3Audio() {
+    papyrusL3Audio.currentTime = 0;
+    papyrusL3Audio.play().catch(e => console.log("Le son ne fonctionnait pas.", e));
+}
+
 
 // ==========================================
 // 8. ميزان العدالة (La Balance)
