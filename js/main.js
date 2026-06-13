@@ -562,10 +562,6 @@ let balancePhase = "good"; // بتبدأ بكفة 'Bien informé'
 let placedGood = [];
 let placedBad = [];
 
-function startBalance() {
-    switchScene('screen-sentence-builder', 'screen-balance');
-    updateBalanceUI();
-}
 
 function updateBalanceUI() {
     let instructionText = document.getElementById("balance-instruction");
